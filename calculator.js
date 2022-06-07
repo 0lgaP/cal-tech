@@ -1,18 +1,20 @@
 // Find innermost equasion
-const innerAdd = (str) =>
-  str.substring(str.lastIndexOf("(") + 1, str.indexOf(")"));
+const findInnerEq = (str) =>
+str.substring(str.lastIndexOf("(") + 1, str.indexOf(")"));
 
-// Changing regex function
-const innerSlice = (str) =>
+// Find Brackets RegEx
+const brakets = /(?<=\().*(?=\))/g;
+
+// Changing RegEx function
+const changeRE = (str) =>
   str.slice(str.lastIndexOf("(") + 1, str.indexOf(")"));
 
-// Return the sum or product
+// Return calculation
 const calculate = (str) => {
-  let exp = innerAdd(str).toLowerCase().split(" ");
+  let exp = findInnerEq(str).toLowerCase().split(" ").filter(Boolean);
   let calc = exp
     .slice(1)
     .map((element) => parseInt(element))
-    .filter(Boolean);
 
   switch (exp[0]) {
     case "add":
@@ -24,19 +26,16 @@ const calculate = (str) => {
     default:
       console.log("Please enter valid expression");
       process.exit();
-      break;
   }
 };
 
-// Find Brackets RegEx
-const brakets = /(?<=\().*(?=\))/g;
 
 // Recursive function
 const calculator = (str) => {
   let curString;
   if (str.match(brakets)) {
     curString = str;
-    let changingReg = `\(${innerSlice(curString)}\)`;
+    let changingReg = `\(${changeRE(curString)}\)`;
     curString = curString.replace(changingReg, calculate(curString));
     return calculator(curString);
   } else {
@@ -44,4 +43,4 @@ const calculator = (str) => {
   }
 };
 
-console.log(calculator(process.argv[2].trim()));
+console.log(calculator(process.argv[2]));
